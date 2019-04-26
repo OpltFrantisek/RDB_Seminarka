@@ -36,5 +36,6 @@ namespace RdbSem
         public virtual DbSet<Trasy> Trasy { get; set; }
         public virtual DbSet<TypKontaktu> TypKontaktu { get; set; }
         public virtual DbSet<Znacka> Znacka { get; set; }
+        public virtual DbSet<Hash> Hash { get; set; }
     }
 }

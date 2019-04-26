@@ -29,17 +29,19 @@ namespace RdbSem
         {
             RDB_SeminarkaEntities db = new RDB_SeminarkaEntities();
            foreach(var item in checkedList_Tabulky.CheckedItems)
+            {
+                List<string> hashs = new List<string>();
                 switch (item)
                 {
-                    case "Autobus" :
-                        CSVHelper.ExportAutobus(db.Autobus,"Autobus.csv");
-                        SaveHash(HashCreator.CreateMD5("Autobus.csv"));
+                    case "Autobus":
+                        CSVHelper.ExportAutobus(db.Autobus, "Autobus.csv");
+                        hashs.Add(HashCreator.CreateMD5("Autobus.csv"));
                         break;
                     case "Jizda":; break;
                     case "Jizdenka":; break;
                     case "Klient":
                         CSVHelper.ExportKlient(db.Klient, "klient.csv");
-                        SaveHash(HashCreator.CreateMD5("klient.csv"));
+                        hashs.Add(HashCreator.CreateMD5("klient.csv"));
                         break;
                     case "Kontakt":; break;
                     case "Lokalita":; break;
@@ -49,10 +51,25 @@ namespace RdbSem
                     case "Znacka":; break;
                     default: break;
                 }
+                SaveHashs(hashs, db);
+            }
+           
         }
-        private static void SaveHash(string hash)
+        private static void SaveHashs(List<string> hashs, RDB_SeminarkaEntities db)
         {
-            
+            // TODO mozna by bylo lepsi udelet to na strane sql serveru 
+            foreach (var hash in hashs)
+                if(db.Hash.Where(x => x.hash1 == hash) == null)
+                {
+                    db.Hash.Add(new Hash() { hash1 = hash });
+                }
+            db.SaveChanges();
+        }
+        private static bool ExistHash(string hash,RDB_SeminarkaEntities db)
+        {
+            if (db.Hash.FirstOrDefault(x => x.hash1 == hash) != null)
+                return true;
+            return false;
         }
     }
    

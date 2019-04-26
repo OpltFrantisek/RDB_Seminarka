@@ -27,6 +27,7 @@
         <AssociationConnector Association="RDB_SeminarkaModel.FK__Trasy__kam__6E01572D" ManuallyRouted="false" />
         <AssociationConnector Association="RDB_SeminarkaModel.FK__Trasy__odkud__6D0D32F4" ManuallyRouted="false" />
         <AssociationConnector Association="RDB_SeminarkaModel.Mezizastavka" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="RDB_SeminarkaModel.Hash" Width="1.5" PointX="7.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

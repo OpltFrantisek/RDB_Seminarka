@@ -1,0 +1,15 @@
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\RdbSem.exe.config
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\RdbSem.exe
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\RdbSem.pdb
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.csprojAssemblyReference.cache
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.Form1.resources
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.Properties.Resources.resources
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.csproj.GenerateResource.cache
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.csproj.CoreCompileInputs.cache
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.exe
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.pdb
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\EntityFramework.dll
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\EntityFramework.xml
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\KureciPloutev\source\repos\WebApplication1\RdbSem\obj\Debug\RdbSem.csproj.CopyComplete

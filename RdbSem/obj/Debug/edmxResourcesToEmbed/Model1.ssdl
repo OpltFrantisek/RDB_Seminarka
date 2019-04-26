@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RDB_SeminarkaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Autobus">
+    <Key>
+      <PropertyRef Name="spz" />
+    </Key>
+    <Property Name="spz" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="znacka" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Jizda">
+    <Key>
+      <PropertyRef Name="linka" />
+      <PropertyRef Name="cas" />
+    </Key>
+    <Property Name="linka" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="spz" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="cislo_rp" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="cas" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Jizdenka">
+    <Key>
+      <PropertyRef Name="cislo" />
+    </Key>
+    <Property Name="linka" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="email" Type="nvarchar" MaxLength="50" />
+    <Property Name="cas" Type="datetime" Nullable="false" />
+    <Property Name="cislo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Klient">
+    <Key>
+      <PropertyRef Name="email" />
+    </Key>
+    <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="jmeno" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="prijmeni" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Kontakt">
+    <Key>
+      <PropertyRef Name="hodnota" />
+    </Key>
+    <Property Name="hodnota" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="typ" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="cislo_rp" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Lokalita">
+    <Key>
+      <PropertyRef Name="nazev" />
+    </Key>
+    <Property Name="nazev" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Mezizastavka">
+    <Key>
+      <PropertyRef Name="nazev" />
+      <PropertyRef Name="linka" />
+    </Key>
+    <Property Name="nazev" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="linka" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Ridic">
+    <Key>
+      <PropertyRef Name="cislo_rp" />
+    </Key>
+    <Property Name="cislo_rp" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="jmeno" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="prijmeni" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Trasy">
+    <Key>
+      <PropertyRef Name="linka" />
+    </Key>
+    <Property Name="linka" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="odkud" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="kam" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TypKontaktu">
+    <Key>
+      <PropertyRef Name="typ" />
+    </Key>
+    <Property Name="typ" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Znacka">
+    <Key>
+      <PropertyRef Name="znacka" />
+    </Key>
+    <Property Name="znacka" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Autobus__znacka__73BA3083">
+    <End Role="Znacka" Type="Self.Znacka" Multiplicity="1" />
+    <End Role="Autobus" Type="Self.Autobus" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Znacka">
+        <PropertyRef Name="znacka" />
+      </Principal>
+      <Dependent Role="Autobus">
+        <PropertyRef Name="znacka" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Jizda__cislo_rp__74AE54BC">
+    <End Role="Ridic" Type="Self.Ridic" Multiplicity="1" />
+    <End Role="Jizda" Type="Self.Jizda" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ridic">
+        <PropertyRef Name="cislo_rp" />
+      </Principal>
+      <Dependent Role="Jizda">
+        <PropertyRef Name="cislo_rp" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Jizda__linka__70DDC3D8">
+    <End Role="Trasy" Type="Self.Trasy" Multiplicity="1" />
+    <End Role="Jizda" Type="Self.Jizda" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trasy">
+        <PropertyRef Name="linka" />
+      </Principal>
+      <Dependent Role="Jizda">
+        <PropertyRef Name="linka" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Jizda__spz__72C60C4A">
+    <End Role="Autobus" Type="Self.Autobus" Multiplicity="1" />
+    <End Role="Jizda" Type="Self.Jizda" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Autobus">
+        <PropertyRef Name="spz" />
+      </Principal>
+      <Dependent Role="Jizda">
+        <PropertyRef Name="spz" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Jizdenka__71D1E811">
+    <End Role="Jizda" Type="Self.Jizda" Multiplicity="1" />
+    <End Role="Jizdenka" Type="Self.Jizdenka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Jizda">
+        <PropertyRef Name="linka" />
+        <PropertyRef Name="cas" />
+      </Principal>
+      <Dependent Role="Jizdenka">
+        <PropertyRef Name="linka" />
+        <PropertyRef Name="cas" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Jizdenka__email__778AC167">
+    <End Role="Klient" Type="Self.Klient" Multiplicity="0..1" />
+    <End Role="Jizdenka" Type="Self.Jizdenka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Klient">
+        <PropertyRef Name="email" />
+      </Principal>
+      <Dependent Role="Jizdenka">
+        <PropertyRef Name="email" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Kontakt__cislo_r__75A278F5">
+    <End Role="Ridic" Type="Self.Ridic" Multiplicity="1" />
+    <End Role="Kontakt" Type="Self.Kontakt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ridic">
+        <PropertyRef Name="cislo_rp" />
+      </Principal>
+      <Dependent Role="Kontakt">
+        <PropertyRef Name="cislo_rp" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Kontakt__typ__76969D2E">
+    <End Role="TypKontaktu" Type="Self.TypKontaktu" Multiplicity="1" />
+    <End Role="Kontakt" Type="Self.Kontakt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TypKontaktu">
+        <PropertyRef Name="typ" />
+      </Principal>
+      <Dependent Role="Kontakt">
+        <PropertyRef Name="typ" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Mezizasta__linka__6FE99F9F">
+    <End Role="Trasy" Type="Self.Trasy" Multiplicity="1" />
+    <End Role="Mezizastavka" Type="Self.Mezizastavka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trasy">
+        <PropertyRef Name="linka" />
+      </Principal>
+      <Dependent Role="Mezizastavka">
+        <PropertyRef Name="linka" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Mezizasta__nazev__6EF57B66">
+    <End Role="Lokalita" Type="Self.Lokalita" Multiplicity="1" />
+    <End Role="Mezizastavka" Type="Self.Mezizastavka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lokalita">
+        <PropertyRef Name="nazev" />
+      </Principal>
+      <Dependent Role="Mezizastavka">
+        <PropertyRef Name="nazev" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Trasy__kam__6E01572D">
+    <End Role="Lokalita" Type="Self.Lokalita" Multiplicity="1" />
+    <End Role="Trasy" Type="Self.Trasy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lokalita">
+        <PropertyRef Name="nazev" />
+      </Principal>
+      <Dependent Role="Trasy">
+        <PropertyRef Name="kam" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Trasy__odkud__6D0D32F4">
+    <End Role="Lokalita" Type="Self.Lokalita" Multiplicity="1" />
+    <End Role="Trasy" Type="Self.Trasy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lokalita">
+        <PropertyRef Name="nazev" />
+      </Principal>
+      <Dependent Role="Trasy">
+        <PropertyRef Name="odkud" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="RDB_SeminarkaModelStoreContainer">
+    <EntitySet Name="Autobus" EntityType="Self.Autobus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Jizda" EntityType="Self.Jizda" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Jizdenka" EntityType="Self.Jizdenka" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Klient" EntityType="Self.Klient" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Kontakt" EntityType="Self.Kontakt" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Lokalita" EntityType="Self.Lokalita" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Mezizastavka" EntityType="Self.Mezizastavka" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Ridic" EntityType="Self.Ridic" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Trasy" EntityType="Self.Trasy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TypKontaktu" EntityType="Self.TypKontaktu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Znacka" EntityType="Self.Znacka" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Autobus__znacka__73BA3083" Association="Self.FK__Autobus__znacka__73BA3083">
+      <End Role="Znacka" EntitySet="Znacka" />
+      <End Role="Autobus" EntitySet="Autobus" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Jizda__cislo_rp__74AE54BC" Association="Self.FK__Jizda__cislo_rp__74AE54BC">
+      <End Role="Ridic" EntitySet="Ridic" />
+      <End Role="Jizda" EntitySet="Jizda" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Jizda__linka__70DDC3D8" Association="Self.FK__Jizda__linka__70DDC3D8">
+      <End Role="Trasy" EntitySet="Trasy" />
+      <End Role="Jizda" EntitySet="Jizda" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Jizda__spz__72C60C4A" Association="Self.FK__Jizda__spz__72C60C4A">
+      <End Role="Autobus" EntitySet="Autobus" />
+      <End Role="Jizda" EntitySet="Jizda" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Jizdenka__71D1E811" Association="Self.FK__Jizdenka__71D1E811">
+      <End Role="Jizda" EntitySet="Jizda" />
+      <End Role="Jizdenka" EntitySet="Jizdenka" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Jizdenka__email__778AC167" Association="Self.FK__Jizdenka__email__778AC167">
+      <End Role="Klient" EntitySet="Klient" />
+      <End Role="Jizdenka" EntitySet="Jizdenka" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Kontakt__cislo_r__75A278F5" Association="Self.FK__Kontakt__cislo_r__75A278F5">
+      <End Role="Ridic" EntitySet="Ridic" />
+      <End Role="Kontakt" EntitySet="Kontakt" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Kontakt__typ__76969D2E" Association="Self.FK__Kontakt__typ__76969D2E">
+      <End Role="TypKontaktu" EntitySet="TypKontaktu" />
+      <End Role="Kontakt" EntitySet="Kontakt" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Mezizasta__linka__6FE99F9F" Association="Self.FK__Mezizasta__linka__6FE99F9F">
+      <End Role="Trasy" EntitySet="Trasy" />
+      <End Role="Mezizastavka" EntitySet="Mezizastavka" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Mezizasta__nazev__6EF57B66" Association="Self.FK__Mezizasta__nazev__6EF57B66">
+      <End Role="Lokalita" EntitySet="Lokalita" />
+      <End Role="Mezizastavka" EntitySet="Mezizastavka" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Trasy__kam__6E01572D" Association="Self.FK__Trasy__kam__6E01572D">
+      <End Role="Lokalita" EntitySet="Lokalita" />
+      <End Role="Trasy" EntitySet="Trasy" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Trasy__odkud__6D0D32F4" Association="Self.FK__Trasy__odkud__6D0D32F4">
+      <End Role="Lokalita" EntitySet="Lokalita" />
+      <End Role="Trasy" EntitySet="Trasy" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

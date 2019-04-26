@@ -33,13 +33,14 @@ namespace RdbSem
                 {
                     case "Autobus" :
                         CSVHelper.ExportAutobus(db.Autobus,"Autobus.csv");
-                        HashCreator.CreateMD5("Autobus.csv");
-                            break;
+                        SaveHash(HashCreator.CreateMD5("Autobus.csv"));
+                        break;
                     case "Jizda":; break;
                     case "Jizdenka":; break;
                     case "Klient":
                         CSVHelper.ExportKlient(db.Klient, "klient.csv");
-                        HashCreator.CreateMD5("klient.csv"); ; break;
+                        SaveHash(HashCreator.CreateMD5("klient.csv"));
+                        break;
                     case "Kontakt":; break;
                     case "Lokalita":; break;
                     case "Ridic":; break;
@@ -49,7 +50,12 @@ namespace RdbSem
                     default: break;
                 }
         }
+        private static void SaveHash(string hash)
+        {
+            
+        }
     }
+   
     static class HashCreator
     {
         public static string CreateMD5(string path)

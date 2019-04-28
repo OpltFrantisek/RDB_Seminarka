@@ -1,0 +1,7 @@
+
+program/.vs/RDB_Seminarka/v15/.suo
+*.ide-shm
+*.ide-wal
+program/RdbSem/obj/Debug/RdbSem.csproj.CoreCompileInputs.cache
+program/.vs/RDB_Seminarka/v15/Server/sqlite3/storage.ide-wal
+program/.vs/RDB_Seminarka/v15/Server/sqlite3/storage.ide-shm

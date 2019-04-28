@@ -105,5 +105,13 @@
         <ScalarProperty Name="nazev" ColumnName="nazev" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="Hash">
+      <EntityTypeMapping TypeName="RDB_SeminarkaModel.Hash">
+        <MappingFragment StoreEntitySet="Hash">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="hash1" ColumnName="hash" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

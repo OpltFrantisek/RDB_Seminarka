@@ -7,6 +7,13 @@
     <Property Name="spz" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="znacka" Type="nvarchar" MaxLength="50" Nullable="false" />
   </EntityType>
+  <EntityType Name="Hash">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="hash" Type="varchar" MaxLength="200" />
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
   <EntityType Name="Jizda">
     <Key>
       <PropertyRef Name="linka" />
@@ -242,6 +249,7 @@
   </Association>
   <EntityContainer Name="RDB_SeminarkaModelStoreContainer">
     <EntitySet Name="Autobus" EntityType="Self.Autobus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Hash" EntityType="Self.Hash" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Jizda" EntityType="Self.Jizda" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Jizdenka" EntityType="Self.Jizdenka" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Klient" EntityType="Self.Klient" Schema="dbo" store:Type="Tables" />

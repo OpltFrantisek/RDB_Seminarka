@@ -290,5 +290,13 @@
       <End Role="Trasy" EntitySet="Trasy" />
       <End Role="Lokalita" EntitySet="Lokalita" />
     </AssociationSet>
+    <EntitySet Name="Hash" EntityType="RDB_SeminarkaModel.Hash" />
   </EntityContainer>
+  <EntityType Name="Hash">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="hash1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
 </Schema>

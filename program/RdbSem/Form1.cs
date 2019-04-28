@@ -25,31 +25,33 @@ namespace RdbSem
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            RDB_SeminarkaEntities db = new RDB_SeminarkaEntities();
-           foreach(var item in checkedList_Tabulky.CheckedItems)
+            using (var db = new RDB_SeminarkaEntities())
             {
-                List<string> hashs = new List<string>();
-                switch (item)
+                foreach (var item in checkedList_Tabulky.CheckedItems)
                 {
-                    case "Autobus":
-                        CSVHelper.ExportAutobus(db.Autobus, "Autobus.csv");
-                        hashs.Add(HashCreator.CreateMD5("Autobus.csv"));
-                        break;
-                    case "Jizda":; break;
-                    case "Jizdenka":; break;
-                    case "Klient":
-                        CSVHelper.ExportKlient(db.Klient, "klient.csv");
-                        hashs.Add(HashCreator.CreateMD5("klient.csv"));
-                        break;
-                    case "Kontakt":; break;
-                    case "Lokalita":; break;
-                    case "Ridic":; break;
-                    case "Trasy":; break;
-                    case "TypKontaktu":; break;
-                    case "Znacka":; break;
-                    default: break;
+                    List<string> hashs = new List<string>();
+                    switch (item)
+                    {
+                        case "Autobus":
+                            CSVHelper.ExportAutobus(db.Autobus, "Autobus.csv");
+                            hashs.Add(HashCreator.CreateMD5("Autobus.csv"));
+                            break;
+                        case "Jizda":; break;
+                        case "Jizdenka":; break;
+                        case "Klient":
+                            CSVHelper.ExportKlient(db.Klient, "klient.csv");
+                            hashs.Add(HashCreator.CreateMD5("klient.csv"));
+                            break;
+                        case "Kontakt":; break;
+                        case "Lokalita":; break;
+                        case "Ridic":; break;
+                        case "Trasy":; break;
+                        case "TypKontaktu":; break;
+                        case "Znacka":; break;
+                        default: break;
+                    }
+                    SaveHashs(hashs, db);
                 }
-                SaveHashs(hashs, db);
             }
            
         }
@@ -57,7 +59,7 @@ namespace RdbSem
         {
             // TODO mozna by bylo lepsi udelet to na strane sql serveru 
             foreach (var hash in hashs)
-                if(db.Hash.Where(x => x.hash1 == hash) == null)
+                if(db.Hash.FirstOrDefault(x => x.hash1 == hash) == null)
                 {
                     db.Hash.Add(new Hash() { hash1 = hash });
                 }
@@ -69,8 +71,88 @@ namespace RdbSem
                 return true;
             return false;
         }
+
+        private void buttonKontrola_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "import souboru";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                using (var db = new RDB_SeminarkaEntities()) {
+                    var neco = (fdlg.FileName.Split('\\').Last());
+                    switch (neco)
+                    {
+                        case "Autobus":
+                            break;
+                        case "Jizda":; break;
+                        case "Jizdenka":; break;
+                        case "klient.csv":
+                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);
+                            foreach (var klient in resutlt)
+                                if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
+                                    db.Klient.Add(klient);
+                            break;
+                        case "Kontakt":; break;
+                        case "Lokalita":; break;
+                        case "Ridic":; break;
+                        case "Trasy":; break;
+                        case "TypKontaktu":; break;
+                        case "Znacka":; break;
+                        default: break;
+                    }
+                    db.SaveChanges();
+                }
+                 
+            }
+           
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "import souboru";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                using (var db = new RDB_SeminarkaEntities())
+                {
+                    var neco = (fdlg.FileName.Split('\\').Last());
+                    switch (neco)
+                    {
+                        case "Autobus":
+                            break;
+                        case "Jizda":; break;
+                        case "Jizdenka":; break;
+                        case "klient.csv":
+                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);
+                            if (!ExistHash(fdlg.FileName, db))
+                            {
+                                string message = "Soubor nebyl vygenerován touto DB";
+                                MessageBox.Show(message);
+                            }                          
+                            break;
+                        case "Kontakt":; break;
+                        case "Lokalita":; break;
+                        case "Ridic":; break;
+                        case "Trasy":; break;
+                        case "TypKontaktu":; break;
+                        case "Znacka":; break;
+                        default: break;
+                    }
+                    db.SaveChanges();
+                }
+
+            }
+        }
     }
-   
+
     static class HashCreator
     {
         public static string CreateMD5(string path)
@@ -79,7 +161,8 @@ namespace RdbSem
             {
                 using (var stream = File.OpenRead(path))
                 {
-                    return md5.ComputeHash(stream).ToString();
+                    var buffer = md5.ComputeHash(stream);
+                    return System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
                 }
             }
         }

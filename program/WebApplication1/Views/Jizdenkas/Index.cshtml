@@ -1,0 +1,39 @@
+﻿@model IEnumerable<WebApplication1.Models.Jizdenka>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Jizda.spz)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Klient.jmeno)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Jizda.spz)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Klient.jmeno)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.cislo }) |
+            @Html.ActionLink("Details", "Details", new { id=item.cislo }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.cislo })
+        </td>
+    </tr>
+}
+
+</table>

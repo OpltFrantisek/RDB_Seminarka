@@ -28,3 +28,5 @@ C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\obj\Debug\R
 C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\obj\Debug\RdbSem.csproj.CopyComplete
 C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\obj\Debug\RdbSem.exe
 C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\obj\Debug\RdbSem.pdb
+C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\bin\Debug\RdbSem.exe.CodeAnalysisLog.xml
+C:\Users\KureciPloutev\Documents\GitHub\RDB_Seminarka\program\RdbSem\bin\Debug\RdbSem.exe.lastcodeanalysissucceeded

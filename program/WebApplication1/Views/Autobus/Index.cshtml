@@ -1,0 +1,36 @@
+﻿@model IEnumerable<WebApplication1.Models.Autobus>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Znacka1.znacka1)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.spz)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Znacka1.znacka1)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.spz }) |
+            @Html.ActionLink("Details", "Details", new { id = item.spz }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.spz })
+        </td>
+    </tr>
+}
+
+</table>

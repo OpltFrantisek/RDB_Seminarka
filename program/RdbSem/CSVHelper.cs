@@ -2,12 +2,12 @@
 using System.Data.Entity;
 using System.IO;
 using System.Text;
-
+using System.Linq;
 namespace RdbSem
 {
     static class CSVHelper
     {
-
+       
         internal static List<Klient> ImportKlient(string path)
         {
             List<Klient> klients = new List<Klient>(); 
@@ -41,7 +41,13 @@ namespace RdbSem
             StringBuilder sb = new StringBuilder();
             foreach (var item in klient)
             {
-                sb.Append(string.Format("{0},{1},{2}\n", item.jmeno, item.prijmeni,item.email));
+                bool res =  Encoding.UTF8.GetBytes(item.jmeno).Select(x => (int)x).Sum() % 2 == 1 ? true : false ;
+                string jmeno;
+                if (res)
+                    jmeno = item.jmeno;
+                else
+                    jmeno = item.jmeno + char.ConvertFromUtf32(0);
+                sb.Append(string.Format("{0},{1},{2}\n", jmeno, item.prijmeni,item.email));
             }
             using (var file = File.CreateText(path))
             {

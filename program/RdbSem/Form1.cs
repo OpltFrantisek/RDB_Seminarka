@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -91,7 +92,7 @@ namespace RdbSem
                         case "Jizda":; break;
                         case "Jizdenka":; break;
                         case "klient.csv":
-                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);
+                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);                        
                             foreach (var klient in resutlt)
                                 if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
                                     db.Klient.Add(klient);
@@ -124,32 +125,52 @@ namespace RdbSem
                 using (var db = new RDB_SeminarkaEntities())
                 {
                     var neco = (fdlg.FileName.Split('\\').Last());
+                    string message = "";
                     switch (neco)
                     {
-                        case "Autobus":
+                        case "autobus":
                             break;
-                        case "Jizda":; break;
-                        case "Jizdenka":; break;
+                        case "jizda":; break;
+                        case "jizdenka":; break;
                         case "klient.csv":
-                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);
-                            if (!ExistHash(fdlg.FileName, db))
+                            var result = CSVHelper.ImportKlient(fdlg.FileName);
+                            
+                            if (!ExistHash(HashCreator.CreateMD5(fdlg.FileName), db))
                             {
-                                string message = "Soubor nebyl vygenerován touto DB";
-                                MessageBox.Show(message);
-                            }                          
+                                if (IsfromDB(result.Select(x => x.jmeno).ToList()))
+                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB ale data byli upraveny",neco);
+                                else
+                                    message = string.Format("Soubor {0} není z naší DB", neco);
+                                
+                            }
+                            else
+                            {
+                                message = string.Format("Soubor {0} je OK", neco);                             
+                            }
                             break;
-                        case "Kontakt":; break;
-                        case "Lokalita":; break;
-                        case "Ridic":; break;
-                        case "Trasy":; break;
-                        case "TypKontaktu":; break;
-                        case "Znacka":; break;
+                        case "kontakt":; break;
+                        case "lokalita":; break;
+                        case "ridic":; break;
+                        case "trasy":; break;
+                        case "typKontaktu":; break;
+                        case "znacka":; break;
                         default: break;
                     }
-                    db.SaveChanges();
+                    MessageBox.Show(message);
                 }
 
             }
+        }
+
+        private bool IsfromDB(List<string> values)
+        {
+            foreach(var item in values)
+            {
+                bool res = Encoding.UTF8.GetBytes(item).Select(x => (int)x).Sum() % 2 == 1 ? true : false;
+                if (res == false && !(item.Contains(char.ConvertFromUtf32(0))|| item.Contains(' ')))
+                    return false;
+            }
+            return true;
         }
     }
 

@@ -98,7 +98,7 @@ namespace RdbSem
                         case "jizda.csv":
                             var jizdas = CSVHelper.ImportJizda(fdlg.FileName);
                             foreach(var jizda in jizdas)
-                                if(db.Jizda.FirstOrDefault(x => x.cas == jizda.cas) == null)
+                                if(db.Jizda.FirstOrDefault(x => x.cas == jizda.cas && x.linka == jizda.linka) == null)
                                     db.Jizda.Add(jizda);
                             break;
 

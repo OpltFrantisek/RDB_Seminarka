@@ -155,8 +155,7 @@ namespace RdbSem
 
         private static System.DateTime timestampStringToDatetime(string timestamp){
             // Because timestamp doesnt exist, it's converted to datetime
-            // Lose of precision - not using part after dot
-            int seconds = int.Parse(timestamp.Split('.')[0]);
+            double seconds = double.Parse(timestamp, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
             System.DateTime dateTime = new System.DateTime(1970,1,1,0,0,0);
             dateTime = dateTime.AddSeconds(seconds);
 

@@ -6,3 +6,12 @@ program/RdbSem/obj/Debug/RdbSem.csproj.CoreCompileInputs.cache
 program/.vs/RDB_Seminarka/v15/Server/sqlite3/storage.ide-wal
 program/.vs/RDB_Seminarka/v15/Server/sqlite3/storage.ide-shm
 program/.vs/RDB_Seminarka/v15/.suo
+
+.vs/
+*.suo
+*.cache
+
+[Bb]in/
+[Oo]bj/
+
+App.config

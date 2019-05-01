@@ -85,31 +85,85 @@ namespace RdbSem
             {
                 using (var db = new RDB_SeminarkaEntities()) {
                     var neco = (fdlg.FileName.Split('\\').Last());
+
                     switch (neco)
                     {
-                        case "Autobus":
+                        case "autobus.csv":
+                            var autobuses = CSVHelper.ImportAutobus(fdlg.FileName);
+                            foreach(var autobus in autobuses)
+                                if(db.Autobus.FirstOrDefault(x => x.spz == autobus.spz) == null)
+                                    db.Autobus.Add(autobus);
                             break;
-                        case "Jizda":; break;
-                        case "Jizdenka":; break;
+
+                        case "jizda.csv":
+                            var jizdas = CSVHelper.ImportJizda(fdlg.FileName);
+                            foreach(var jizda in jizdas)
+                                if(db.Jizda.FirstOrDefault(x => x.cas == jizda.cas) == null)
+                                    db.Jizda.Add(jizda);
+                            break;
+
+                        case "jizdenka.csv":
+                            var jizdenkas = CSVHelper.ImportJizdenka(fdlg.FileName);
+                            foreach(var jizdenka in jizdenkas)
+                                if(db.Jizdenka.FirstOrDefault(x => x.cislo == jizdenka.cislo) == null)
+                                    db.Jizdenka.Add(jizdenka);
+                            break;
+
                         case "klient.csv":
-                            var resutlt = CSVHelper.ImportKlient(fdlg.FileName);                        
-                            foreach (var klient in resutlt)
+                            var klients = CSVHelper.ImportKlient(fdlg.FileName);                        
+                            foreach (var klient in klients)
                                 if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
                                     db.Klient.Add(klient);
                             break;
-                        case "Kontakt":; break;
-                        case "Lokalita":; break;
-                        case "Ridic":; break;
-                        case "Trasy":; break;
-                        case "TypKontaktu":; break;
-                        case "Znacka":; break;
-                        default: break;
+
+                        case "kontakt.csv":
+                            var kontakts = CSVHelper.ImportKontakt(fdlg.FileName);
+                            foreach(var kontakt in kontakts)
+                                if(db.Kontakt.FirstOrDefault(x => x.hodnota == kontakt.hodnota) == null)
+                                    db.Kontakt.Add(kontakt);
+                            break;
+
+                        case "lokalita.csv":
+                            var lokalitas = CSVHelper.ImportLokalita(fdlg.FileName);
+                            foreach(var lokalita in lokalitas)
+                                if(db.Lokalita.FirstOrDefault(x => x.nazev == lokalita.nazev) == null)
+                                    db.Lokalita.Add(lokalita);
+                            break;
+                        
+                        case "ridic.csv":
+                            var ridics = CSVHelper.ImportRidic(fdlg.FileName);
+                            foreach (var ridic in ridics)
+                                if(db.Ridic.FirstOrDefault(x => x.cislo_rp == ridic.cislo_rp) == null)
+                                    db.Ridic.Add(ridic);
+                            break;
+
+                        case "trasy.csv":
+                            var trasies = CSVHelper.ImportTrasy(fdlg.FileName);
+                            foreach(var trasa in trasies)
+                                if(db.Trasy.FirstOrDefault(x => x.linka == trasa.linka) == null)
+                                    db.Trasy.Add(trasa);
+                            break;
+
+                        case "typkontaktu.csv":
+                            var typKontaktus = CSVHelper.ImportTypKontaktu(fdlg.FileName);
+                            foreach(var typKontaktu in typKontaktus)
+                                if(db.TypKontaktu.FirstOrDefault(x => x.typ == typKontaktu.typ) == null)
+                                    db.TypKontaktu.Add(typKontaktu);
+                            break;
+
+                        case "znacka.csv":
+                            var znackas = CSVHelper.ImportZnacka(fdlg.FileName);
+                            foreach(var znacka in znackas)
+                                if(db.Znacka.FirstOrDefault(x => x.znacka1 == znacka.znacka1) == null)
+                                    db.Znacka.Add(znacka);
+                            break;
+                        default: 
+                            break;
                     }
                     db.SaveChanges();
-                }
-                 
+                    MessageBox.Show("Done!");
+                }                 
             }
-           
         }
 
         private void button1_Click(object sender, EventArgs e)

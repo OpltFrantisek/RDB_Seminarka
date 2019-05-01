@@ -34,10 +34,12 @@ namespace RdbSem
                     switch (item)
                     {
                         case "Autobus":
-                            CSVHelper.ExportAutobus(db.Autobus, "Autobus.csv");
-                            hashs.Add(HashCreator.CreateMD5("Autobus.csv"));
+                            CSVHelper.ExportAutobus(db.Autobus, "autobus.csv");
+                            hashs.Add(HashCreator.CreateMD5("autobus.csv"));
                             break;
-                        case "Jizda":; break;
+                        case "Jizda":
+                            CSVHelper.ExportJizda(db.Jizda, "jizda.csv");
+                            break;
                         case "Jizdenka":; break;
                         case "Klient":
                             CSVHelper.ExportKlient(db.Klient, "klient.csv");
@@ -73,7 +75,7 @@ namespace RdbSem
             return false;
         }
 
-        private void buttonKontrola_Click(object sender, EventArgs e)
+        private void buttonImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "import souboru";

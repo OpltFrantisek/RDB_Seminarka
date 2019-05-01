@@ -69,9 +69,9 @@
             this.buttonKontrola.Name = "buttonKontrola";
             this.buttonKontrola.Size = new System.Drawing.Size(113, 54);
             this.buttonKontrola.TabIndex = 3;
-            this.buttonKontrola.Text = "buttonKontrola";
+            this.buttonKontrola.Text = "buttonImport";
             this.buttonKontrola.UseVisualStyleBackColor = true;
-            this.buttonKontrola.Click += new System.EventHandler(this.buttonKontrola_Click);
+            this.buttonKontrola.Click += new System.EventHandler(this.buttonImport_Click);
             // 
             // button1
             // 

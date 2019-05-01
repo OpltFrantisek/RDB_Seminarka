@@ -14,6 +14,7 @@ namespace RdbSem
 {
     public partial class Form1 : Form
     {
+        static string[] order = { "klient.csv", "lokalita.csv", "trasy.csv", "typkontaktu.csv", "ridic.csv", "kontakt.csv", "znacka.csv", "autobus.csv", "jizda.csv", "jizdenka.csv" };
         public Form1()
         {
             InitializeComponent();
@@ -40,17 +41,38 @@ namespace RdbSem
                         case "Jizda":
                             CSVHelper.ExportJizda(db.Jizda, "jizda.csv");
                             break;
-                        case "Jizdenka":; break;
+                        case "Jizdenka":
+                            CSVHelper.ExportJizdenka(db.Jizdenka, "jizdenka.csv");
+                            hashs.Add(HashCreator.CreateMD5("jizdenka.csv"));
+                            ; break;
                         case "Klient":
                             CSVHelper.ExportKlient(db.Klient, "klient.csv");
                             hashs.Add(HashCreator.CreateMD5("klient.csv"));
                             break;
-                        case "Kontakt":; break;
-                        case "Lokalita":; break;
-                        case "Ridic":; break;
-                        case "Trasy":; break;
-                        case "TypKontaktu":; break;
-                        case "Znacka":; break;
+                        case "Kontakt":
+                            CSVHelper.ExportKontakt(db.Kontakt, "kontakt.csv");
+                            hashs.Add(HashCreator.CreateMD5("kontakt.csv"));
+                            ; break;
+                        case "Lokalita":
+                            CSVHelper.ExportLokalita(db.Lokalita, "lokalita.csv");
+                            hashs.Add(HashCreator.CreateMD5("lokalita.csv"));
+                            ; break;
+                        case "Ridic":
+                            CSVHelper.ExportRidic(db.Ridic, "ridic.csv");
+                            hashs.Add(HashCreator.CreateMD5("ridic.csv"));
+                            ; break;
+                        case "Trasy":
+                            CSVHelper.ExportTrasy(db.Trasy, "trasy.csv");
+                            hashs.Add(HashCreator.CreateMD5("trasy.csv"));
+                            ; break;
+                        case "TypKontaktu":
+                            CSVHelper.ExportTypKontaktu(db.TypKontaktu, "typkontaktu.csv");
+                            hashs.Add(HashCreator.CreateMD5("typkontaktu.csv"));
+                            ; break;
+                        case "Znacka":
+                            CSVHelper.ExportZnacka(db.Znacka, "znacka.csv");
+                            hashs.Add(HashCreator.CreateMD5("znacka.csv"));
+                            ; break;
                         default: break;
                     }
                     SaveHashs(hashs, db);
@@ -83,86 +105,100 @@ namespace RdbSem
             fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
+            fdlg.Multiselect = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 using (var db = new RDB_SeminarkaEntities()) {
-                    var neco = (fdlg.FileName.Split('\\').Last());
-
-                    switch (neco)
+                    // var neco = (fdlg.FileName.Split('\\').Last());
+                    var names = fdlg.FileNames.Select(x => {
+                        var tmp = x.Split('\\').Last();
+                        return new Tuple<string, string>(x, tmp);
+                    });
+                    foreach(var file in order)
                     {
-                        case "autobus.csv":
-                            var autobuses = CSVHelper.ImportAutobus(fdlg.FileName);
-                            foreach(var autobus in autobuses)
-                                if(db.Autobus.FirstOrDefault(x => x.spz == autobus.spz) == null)
-                                    db.Autobus.Add(autobus);
-                            break;
+                        var tmp = names.FirstOrDefault(x => x.Item2 == file);
+                        if (tmp == null)
+                            continue;
+                        var path = tmp.Item1;
+                        switch (file)
+                        {
+                            case "autobus.csv":
+                                var autobuses = CSVHelper.ImportAutobus(path);
+                                foreach (var autobus in autobuses)
+                                    if (db.Autobus.FirstOrDefault(x => x.spz == autobus.spz) == null)
+                                        db.Autobus.Add(autobus);
+                                break;
 
-                        case "jizda.csv":
-                            var jizdas = CSVHelper.ImportJizda(fdlg.FileName);
-                            foreach(var jizda in jizdas)
-                                if(db.Jizda.FirstOrDefault(x => x.cas == jizda.cas && x.linka == jizda.linka) == null)
-                                    db.Jizda.Add(jizda);
-                            break;
+                            case "jizda.csv":
+                                var jizdas = CSVHelper.ImportJizda(path);
+                                foreach (var jizda in jizdas)
+                                    if (db.Jizda.FirstOrDefault(x => x.cas == jizda.cas && x.linka == jizda.linka) == null)
+                                        db.Jizda.Add(jizda);
+                                break;
 
-                        case "jizdenka.csv":
-                            var jizdenkas = CSVHelper.ImportJizdenka(fdlg.FileName);
-                            foreach(var jizdenka in jizdenkas)
-                                if(db.Jizdenka.FirstOrDefault(x => x.cislo == jizdenka.cislo) == null)
-                                    db.Jizdenka.Add(jizdenka);
-                            break;
+                            case "jizdenka.csv":
+                                var jizdenkas = CSVHelper.ImportJizdenka(path);
+                                foreach (var jizdenka in jizdenkas)
+                                    if (db.Jizdenka.FirstOrDefault(x => x.cislo == jizdenka.cislo) == null)
+                                        db.Jizdenka.Add(jizdenka);
+                                break;
 
-                        case "klient.csv":
-                            var klients = CSVHelper.ImportKlient(fdlg.FileName);                        
-                            foreach (var klient in klients)
-                                if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
-                                    db.Klient.Add(klient);
-                            break;
+                            case "klient.csv":
+                                var klients = CSVHelper.ImportKlient(path);
+                                foreach (var klient in klients)
+                                    if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
+                                        db.Klient.Add(klient);
+                                break;
 
-                        case "kontakt.csv":
-                            var kontakts = CSVHelper.ImportKontakt(fdlg.FileName);
-                            foreach(var kontakt in kontakts)
-                                if(db.Kontakt.FirstOrDefault(x => x.hodnota == kontakt.hodnota) == null)
-                                    db.Kontakt.Add(kontakt);
-                            break;
+                            case "kontakt.csv":
+                                var kontakts = CSVHelper.ImportKontakt(path);
+                                foreach (var kontakt in kontakts)
+                                    if (db.Kontakt.FirstOrDefault(x => x.hodnota == kontakt.hodnota) == null)
+                                        db.Kontakt.Add(kontakt);
+                                break;
 
-                        case "lokalita.csv":
-                            var lokalitas = CSVHelper.ImportLokalita(fdlg.FileName);
-                            foreach(var lokalita in lokalitas)
-                                if(db.Lokalita.FirstOrDefault(x => x.nazev == lokalita.nazev) == null)
-                                    db.Lokalita.Add(lokalita);
-                            break;
-                        
-                        case "ridic.csv":
-                            var ridics = CSVHelper.ImportRidic(fdlg.FileName);
-                            foreach (var ridic in ridics)
-                                if(db.Ridic.FirstOrDefault(x => x.cislo_rp == ridic.cislo_rp) == null)
-                                    db.Ridic.Add(ridic);
-                            break;
+                            case "lokalita.csv":
+                                var lokalitas = CSVHelper.ImportLokalita(path);
+                                foreach (var lokalita in lokalitas)
+                                    if (db.Lokalita.FirstOrDefault(x => x.nazev == lokalita.nazev) == null)
+                                        db.Lokalita.Add(lokalita);
+                                break;
 
-                        case "trasy.csv":
-                            var trasies = CSVHelper.ImportTrasy(fdlg.FileName);
-                            foreach(var trasa in trasies)
-                                if(db.Trasy.FirstOrDefault(x => x.linka == trasa.linka) == null)
-                                    db.Trasy.Add(trasa);
-                            break;
+                            case "ridic.csv":
+                                var ridics = CSVHelper.ImportRidic(path);
+                                foreach (var ridic in ridics)
+                                    if (db.Ridic.FirstOrDefault(x => x.cislo_rp == ridic.cislo_rp) == null)
+                                        db.Ridic.Add(ridic);
+                                break;
 
-                        case "typkontaktu.csv":
-                            var typKontaktus = CSVHelper.ImportTypKontaktu(fdlg.FileName);
-                            foreach(var typKontaktu in typKontaktus)
-                                if(db.TypKontaktu.FirstOrDefault(x => x.typ == typKontaktu.typ) == null)
-                                    db.TypKontaktu.Add(typKontaktu);
-                            break;
+                            case "trasy.csv":
+                                var trasies = CSVHelper.ImportTrasy(path);
+                                foreach (var trasa in trasies)
+                                    if (db.Trasy.FirstOrDefault(x => x.linka == trasa.linka) == null)
+                                        db.Trasy.Add(trasa);
+                                break;
 
-                        case "znacka.csv":
-                            var znackas = CSVHelper.ImportZnacka(fdlg.FileName);
-                            foreach(var znacka in znackas)
-                                if(db.Znacka.FirstOrDefault(x => x.znacka1 == znacka.znacka1) == null)
-                                    db.Znacka.Add(znacka);
-                            break;
-                        default: 
-                            break;
+                            case "typkontaktu.csv":
+                                var typKontaktus = CSVHelper.ImportTypKontaktu(path);
+                                foreach (var typKontaktu in typKontaktus)
+                                    if (db.TypKontaktu.FirstOrDefault(x => x.typ == typKontaktu.typ) == null)
+                                        db.TypKontaktu.Add(typKontaktu);
+                                break;
+
+                            case "znacka.csv":
+                                var znackas = CSVHelper.ImportZnacka(path);
+                                foreach (var znacka in znackas)
+                                    if (db.Znacka.FirstOrDefault(x => x.znacka1 == znacka.znacka1) == null)
+                                        db.Znacka.Add(znacka);
+                                break;
+                            default:
+                                break;
+                        }
+                        db.Database.Log = Console.Write;
+                        db.SaveChanges();
                     }
-                    db.SaveChanges();
+                    
+                    
                     MessageBox.Show("Done!");
                 }                 
             }

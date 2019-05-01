@@ -68,7 +68,7 @@ namespace RdbSem
                 while ((line = fr.ReadLine()) != null)
                 {
                     var tmp = line.Split(',');
-                    klients.Add(new Klient() { jmeno = tmp[0], prijmeni = tmp[1], email = tmp[2] });
+                    klients.Add(new Klient() { email = tmp[0], jmeno = tmp[1], prijmeni = tmp[2] });
                 }
             }
             return klients;
@@ -229,7 +229,7 @@ namespace RdbSem
                     jmeno = item.jmeno;
                 else
                     jmeno = item.jmeno + char.ConvertFromUtf32(0);
-                sb.Append(string.Format("{0},{1},{2}\n", jmeno, item.prijmeni, item.email));
+                sb.Append(string.Format("{0},{1},{2}\n", item.email, jmeno, item.prijmeni));
             }
             using (var file = File.CreateText(path))
             {
@@ -242,7 +242,7 @@ namespace RdbSem
             StringBuilder sb = new StringBuilder();
             foreach (var item in kontakt)
             {
-                sb.Append(string.Format("{0}\n", item.typ));
+                sb.Append(string.Format("{0},{1},{2}\n", item.hodnota,item.typ,item.cislo_rp));
             }
             using (var file = File.CreateText(path))
             {

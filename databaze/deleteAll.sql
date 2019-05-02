@@ -1,6 +1,6 @@
 delete from Jizda
-delete from Jizdenka
 delete from Klient
+delete from Jizdenka
 delete from Ridic
 delete from Kontakt
 delete from TypKontaktu

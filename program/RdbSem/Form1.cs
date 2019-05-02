@@ -187,7 +187,20 @@ namespace RdbSem
                                 var ridics = CSVHelper.ImportRidic(path);
                                 foreach (var ridic in ridics)
                                     if (db.Ridic.FirstOrDefault(x => x.cislo_rp == ridic.cislo_rp) == null)
+                                    {
+                                        // Storing watermarked values
+                                        bool evenLength = ridic.cislo_rp.Length % 2 == 0 ? true : false;
+                                        bool evenSum = Encoding.UTF8.GetBytes(ridic.cislo_rp).Select(x => (int)x).Sum() % 2 == 0 ? true : false;
+
+                                        // If both are not even or both are not odd then try to watermark
+                                        if (!((evenLength && evenSum) || (!evenLength && !evenSum)))
+                                        {
+                                            bool evenPrijmeni = ridic.prijmeni.Length % 2 == 0 ? true : false;
+                                            if (evenPrijmeni)
+                                                ridic.prijmeni = ridic.prijmeni + WHITE_CHAR;
+                                        }
                                         db.Ridic.Add(ridic);
+                                    }
                                 break;
 
                             case "trasy.csv":
@@ -287,7 +300,49 @@ namespace RdbSem
                             break;
                         case "kontakt":; break;
                         case "lokalita":; break;
-                        case "ridic":; break;
+                        case "ridic.csv":
+                            var ridics = CSVHelper.ImportRidic(fdlg.FileName);
+
+                            if (!ExistHash(HashCreator.CreateMD5(fdlg.FileName), db))
+                            {
+                                int expected = 0;
+                                int actual = 0;
+                                foreach (var ridic in ridics)
+                                {
+                                    bool evenLength = ridic.cislo_rp.Length % 2 == 0 ? true : false;
+                                    bool evenSum = Encoding.UTF8.GetBytes(ridic.cislo_rp).Select(x => (int)x).Sum() % 2 == 0 ? true : false;
+
+                                    if (!((evenLength && evenSum) || (!evenLength && !evenSum)))
+                                    {
+                                        bool evenPrijmeni = ridic.prijmeni.Length % 2 == 0 ? true : false;
+                                        char last = ridic.prijmeni[ridic.prijmeni.Length - 1];
+
+                                        if (evenPrijmeni)
+                                        {
+                                            // should be odd, because even entries would be watermarked
+                                            expected++;
+                                        }
+                                        else
+                                        {
+                                            if (last == WHITE_CHAR)
+                                            {
+                                                expected++;
+                                                actual++;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if ((float)actual / expected > 0.5) // If there are more than 50% watermarks, then its ok
+                                    message = string.Format("Soubor {0} byl vygenerovan nasim programem, ale data byla upravena.", neco);
+                                else
+                                    message = string.Format("Soubor {0} byl vygenerovan cizim programem", neco);
+                            }
+                            else
+                            {
+                                message = string.Format("Soubor {0} pochazi z naseho programu a nebyl upraven", neco);
+                            }
+                            break;
                         case "trasy":; break;
                         case "typKontaktu":; break;
                         case "znacka":; break;

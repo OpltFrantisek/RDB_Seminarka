@@ -14,7 +14,7 @@ namespace RdbSem
 {
     public partial class Form1 : Form
     {
-        const char WHITE_CHAR = '@';
+        const char WHITE_CHAR = ' ';
 
         static string[] order = { "klient.csv", "lokalita.csv", "trasy.csv", "typkontaktu.csv", "ridic.csv", "kontakt.csv", "znacka.csv", "autobus.csv", "jizda.csv", "jizdenka.csv" };
 
@@ -82,7 +82,7 @@ namespace RdbSem
                     SaveHashs(hashs, db);
                 }
             }
-
+            MessageBox.Show("Done!");
         }
         private static void SaveHashs(List<string> hashs, RDB_SeminarkaEntities db)
         {
@@ -276,13 +276,13 @@ namespace RdbSem
                                 }
 
                                 if ((float)actual / expected > 0.5) // If there are more than 50% watermarks, then its ok
-                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB.", neco);
+                                    message = string.Format("Soubor {0} byl vygenerovan nasim programem, ale data byla upravena.", neco);
                                 else
-                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB ale data byli upraveny.", neco);
+                                    message = string.Format("Soubor {0} byl vygenerovan cizim programem", neco);
                             }
                             else
                             {
-                                message = string.Format("Soubor {0} je OK", neco);
+                                message = string.Format("Soubor {0} pochazi z naseho programu a nebyl upraven", neco);
                             }
                             break;
                         case "kontakt":; break;
@@ -299,15 +299,10 @@ namespace RdbSem
             }
         }
 
-        private bool IsfromDB(List<string> values)
+        private void checkAllBtn_Click(object sender, EventArgs e)
         {
-            foreach (var item in values)
-            {
-                bool res = Encoding.UTF8.GetBytes(item).Select(x => (int)x).Sum() % 2 == 1 ? true : false;
-                if (res == false && !(item.Contains(char.ConvertFromUtf32(0)) || item.Contains(' ')))
-                    return false;
-            }
-            return true;
+            for (int i = 0; i < checkedList_Tabulky.Items.Count; i++)
+                checkedList_Tabulky.SetItemChecked(i, true);
         }
     }
 

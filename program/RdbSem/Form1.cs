@@ -14,7 +14,10 @@ namespace RdbSem
 {
     public partial class Form1 : Form
     {
+        const char WHITE_CHAR = '@';
+
         static string[] order = { "klient.csv", "lokalita.csv", "trasy.csv", "typkontaktu.csv", "ridic.csv", "kontakt.csv", "znacka.csv", "autobus.csv", "jizda.csv", "jizdenka.csv" };
+
         public Form1()
         {
             InitializeComponent();
@@ -40,6 +43,7 @@ namespace RdbSem
                             break;
                         case "Jizda":
                             CSVHelper.ExportJizda(db.Jizda, "jizda.csv");
+                            hashs.Add(HashCreator.CreateMD5("jizda.csv"));
                             break;
                         case "Jizdenka":
                             CSVHelper.ExportJizdenka(db.Jizdenka, "jizdenka.csv");
@@ -78,19 +82,19 @@ namespace RdbSem
                     SaveHashs(hashs, db);
                 }
             }
-           
+
         }
         private static void SaveHashs(List<string> hashs, RDB_SeminarkaEntities db)
         {
             // TODO mozna by bylo lepsi udelet to na strane sql serveru 
             foreach (var hash in hashs)
-                if(db.Hash.FirstOrDefault(x => x.hash1 == hash) == null)
+                if (db.Hash.FirstOrDefault(x => x.hash1 == hash) == null)
                 {
                     db.Hash.Add(new Hash() { hash1 = hash });
                 }
             db.SaveChanges();
         }
-        private static bool ExistHash(string hash,RDB_SeminarkaEntities db)
+        private static bool ExistHash(string hash, RDB_SeminarkaEntities db)
         {
             if (db.Hash.FirstOrDefault(x => x.hash1 == hash) != null)
                 return true;
@@ -108,13 +112,15 @@ namespace RdbSem
             fdlg.Multiselect = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                using (var db = new RDB_SeminarkaEntities()) {
+                using (var db = new RDB_SeminarkaEntities())
+                {
                     // var neco = (fdlg.FileName.Split('\\').Last());
-                    var names = fdlg.FileNames.Select(x => {
+                    var names = fdlg.FileNames.Select(x =>
+                    {
                         var tmp = x.Split('\\').Last();
                         return new Tuple<string, string>(x, tmp);
                     });
-                    foreach(var file in order)
+                    foreach (var file in order)
                     {
                         var tmp = names.FirstOrDefault(x => x.Item2 == file);
                         if (tmp == null)
@@ -147,7 +153,20 @@ namespace RdbSem
                                 var klients = CSVHelper.ImportKlient(path);
                                 foreach (var klient in klients)
                                     if (db.Klient.FirstOrDefault(x => x.email == klient.email) == null)
+                                    {
+                                        // Storing watermarked values
+                                        bool evenLength = klient.email.Length % 2 == 0 ? true : false;
+                                        bool evenSum = Encoding.UTF8.GetBytes(klient.email).Select(x => (int)x).Sum() % 2 == 0 ? true : false;
+
+                                        // If both are not even or both are not odd then try to watermark
+                                        if (!((evenLength && evenSum) || (!evenLength && !evenSum)))
+                                        {
+                                            bool evenPrijmeni = klient.prijmeni.Length % 2 == 0 ? true : false;
+                                            if (evenPrijmeni)
+                                                klient.prijmeni = klient.prijmeni + WHITE_CHAR;
+                                        }
                                         db.Klient.Add(klient);
+                                    }
                                 break;
 
                             case "kontakt.csv":
@@ -197,10 +216,9 @@ namespace RdbSem
                         db.Database.Log = Console.Write;
                         db.SaveChanges();
                     }
-                    
-                    
+
                     MessageBox.Show("Done!");
-                }                 
+                }
             }
         }
 
@@ -225,19 +243,46 @@ namespace RdbSem
                         case "jizda":; break;
                         case "jizdenka":; break;
                         case "klient.csv":
-                            var result = CSVHelper.ImportKlient(fdlg.FileName);
-                            
+                            var klients = CSVHelper.ImportKlient(fdlg.FileName);
+
                             if (!ExistHash(HashCreator.CreateMD5(fdlg.FileName), db))
                             {
-                                if (IsfromDB(result.Select(x => x.jmeno).ToList()))
-                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB ale data byli upraveny",neco);
+                                int expected = 0;
+                                int actual = 0;
+                                foreach (var klient in klients)
+                                {
+                                    bool evenLength = klient.email.Length % 2 == 0 ? true : false;
+                                    bool evenSum = Encoding.UTF8.GetBytes(klient.email).Select(x => (int)x).Sum() % 2 == 0 ? true : false;
+
+                                    if (!((evenLength && evenSum) || (!evenLength && !evenSum)))
+                                    {
+                                        bool evenPrijmeni = klient.prijmeni.Length % 2 == 0 ? true : false;
+                                        char last = klient.prijmeni[klient.prijmeni.Length - 1];
+
+                                        if (evenPrijmeni)
+                                        {
+                                            // should be odd, because even entries would be watermarked
+                                            expected++;
+                                        }
+                                        else
+                                        {
+                                            if (last == WHITE_CHAR)
+                                            {
+                                                expected++;
+                                                actual++;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if ((float)actual / expected > 0.5) // If there are more than 50% watermarks, then its ok
+                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB.", neco);
                                 else
-                                    message = string.Format("Soubor {0} není z naší DB", neco);
-                                
+                                    message = string.Format("Soubor {0} byl vygenerovan v nasi DB ale data byli upraveny.", neco);
                             }
                             else
                             {
-                                message = string.Format("Soubor {0} je OK", neco);                             
+                                message = string.Format("Soubor {0} je OK", neco);
                             }
                             break;
                         case "kontakt":; break;
@@ -256,10 +301,10 @@ namespace RdbSem
 
         private bool IsfromDB(List<string> values)
         {
-            foreach(var item in values)
+            foreach (var item in values)
             {
                 bool res = Encoding.UTF8.GetBytes(item).Select(x => (int)x).Sum() % 2 == 1 ? true : false;
-                if (res == false && !(item.Contains(char.ConvertFromUtf32(0))|| item.Contains(' ')))
+                if (res == false && !(item.Contains(char.ConvertFromUtf32(0)) || item.Contains(' ')))
                     return false;
             }
             return true;

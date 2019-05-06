@@ -224,13 +224,7 @@ namespace RdbSem
             StringBuilder sb = new StringBuilder();
             foreach (var item in klient)
             {
-                bool res = Encoding.UTF8.GetBytes(item.jmeno).Select(x => (int)x).Sum() % 2 == 1 ? true : false;
-                string jmeno;
-                if (res)
-                    jmeno = item.jmeno;
-                else
-                    jmeno = item.jmeno + char.ConvertFromUtf32(0);
-                sb.Append(string.Format("{0},{1},{2}\n", item.email, jmeno, item.prijmeni));
+                sb.Append(string.Format("{0},{1},{2}\n", item.email, item.jmeno, item.prijmeni));
             }
             using (var file = File.CreateText(path))
             {

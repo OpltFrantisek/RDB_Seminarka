@@ -210,7 +210,8 @@ namespace RdbSem
             StringBuilder sb = new StringBuilder();
             foreach (var item in jizdenka)
             {
-                sb.Append(string.Format("{0},{1},{2},{3}\n", item.linka, item.email, dateTimeToTimestampString(item.cas), item.cislo.ToString()));
+                string email = item.email == null ? "\\N" : item.email;
+                sb.Append(string.Format("{0},{1},{2},{3}\n", item.linka, email, dateTimeToTimestampString(item.cas), item.cislo.ToString()));
             }
             using (var file = File.CreateText(path))
             {
